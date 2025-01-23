@@ -1,11 +1,17 @@
 import React, { useState,useEffect } from 'react';
 import './ProductList.css'
 import CartItem from './CartItem';
-import addItem from './CartSlice';
+import { useDispatch } from 'react-redux';
+import { addItem } from './CartSlice';
+
 function ProductList() {
     const [showCart, setShowCart] = useState(false); 
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
-    const [addedToCart, setAddedToCart] = useState({});
+    //const [addedToCart, setAddedToCart] = useState({});
+
+
+    const dispatch = useDispatch();
+  const [disabledProducts, setDisabledProducts] = useState([]); // State to store disabled products
     const plantsArray = [
         {
             category: "Air Purifying Plants",
@@ -247,13 +253,10 @@ const handlePlantsClick = (e) => {
     e.preventDefault();
     setShowCart(false);
   };
-
-  const handleAddToCart = (plant) => {
+  
+  const handleAddToCart = plant => {
     dispatch(addItem(plant));
-    setAddedToCart((prevState) => ({
-       ...prevState,
-       [plant.name]: true, // Set the product name as key and value as true to indicate it's added to cart
-     }));
+    setDisabledProducts([...disabledProducts, plant.name]); // Mark the product as disabled
   };
 
     return (
